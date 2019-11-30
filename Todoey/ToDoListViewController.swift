@@ -9,8 +9,8 @@
 import UIKit
 
 class TodoListViewController: UITableViewController {
-
-    let itemArray = ["Find Mike", "Buy Eggos", "Destory Demogrogon"]
+    
+    var itemArray = ["Find Mike", "Buy Eggos", "Destory Demogrogon"]
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -38,9 +38,9 @@ class TodoListViewController: UITableViewController {
     //MARK: - Tableview Delegate Method
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-       
+        
         tableView.deselectRow(at: indexPath, animated: true)
-
+        
         if tableView.cellForRow(at: indexPath)?.accessoryType == .checkmark{
             tableView.cellForRow(at: indexPath)?.accessoryType = .none
         } else {
@@ -49,8 +49,56 @@ class TodoListViewController: UITableViewController {
         
     }
     
-  
+    
+    //MARK: - Add New Items
+    
+    @IBAction func addButtonPressed(_ sender: UIBarButtonItem) {
+        
+        var textField = UITextField()
+        //create a global variable
+        let alert = UIAlertController(title: "Add New Todoey Item", message: "", preferredStyle: .alert)
+        
+        
+        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+            //what will happen once the user clicks the Add Item buton on our UIAlert
+            self.itemArray.append(textField.text!)
+            //as we are inside a closure, we need to tell the handler where the itemArray is (i.e. self, this current ViewController)
+            self.tableView.reloadData()
+            //need to reloadData to show new item in tableview
+            
+        }
+        
+        alert.addTextField { (alertTextField) in
+            alertTextField.placeholder = "Create New Item"
+            textField = alertTextField
+            //this is what happens when we click the "+" sign
+            //turn the local variable of altertextfield into a global variable since it only exists in this closure before
+        }
+        
+        
+        
+        alert.addAction(action)
+        present(alert,animated: true, completion: nil)
+    }
+    
     
 }
 
 
+
+
+
+
+//        var newText:String?
+//
+//        alert.addTextField { (alertTextField) in
+//            alertTextField.placeholder = "Create New Item"
+//            newText = alertTextField.text
+//        }
+//
+//        let action = UIAlertAction(title: "Add Item", style: .default) { (action) in
+//            //what will happen once the user clicks the Add Item buton on our UIAlert
+//            print("Success")
+//            print(newText)
+//        }
+//
