@@ -12,8 +12,16 @@ class TodoListViewController: UITableViewController {
     
     var itemArray = ["Find Mike", "Buy Eggos", "Destory Demogrogon"]
     
+    let defaults = UserDefaults.standard
+    
     override func viewDidLoad() {
         super.viewDidLoad()
+        if let items = defaults.array(forKey: "TodoListArray") as? [String] {
+            itemArray = items
+            //set the array to display user defauly and typecast it as String
+            //use optional binding since it would crash if user default is nil
+        }
+        
         
         
         // Do any additional setup after loading the view.
@@ -26,6 +34,8 @@ class TodoListViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ToDoItemCell", for: indexPath)
+        //it's reusing the cell. So when we scroll down, the checkmark will appear in the last new cell that appeared in the screen (since the first one is destroyted and now reallocate the cell the the last)
+        //So we need to assign the checkmark to the data, not the cell
         
         cell.textLabel?.text = itemArray[indexPath.row]
         
@@ -63,6 +73,10 @@ class TodoListViewController: UITableViewController {
             //what will happen once the user clicks the Add Item buton on our UIAlert
             self.itemArray.append(textField.text!)
             //as we are inside a closure, we need to tell the handler where the itemArray is (i.e. self, this current ViewController)
+            self.defaults.set(self.itemArray, forKey: "TodoListArray")
+            //user default saved in P-list, that's why it has to be key-value pair, need the key to retreieve the value. 
+            
+            
             self.tableView.reloadData()
             //need to reloadData to show new item in tableview
             
